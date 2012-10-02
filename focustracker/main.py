@@ -6,6 +6,7 @@ from gi.repository import Wnck
 import logging
 import signal # for Ctrl-C
 import sqlite3
+import time
 
 class Model:
     """
@@ -13,6 +14,9 @@ class Model:
     cấp một giao diện đơn giản đến database đấy luôn.
     """
     def __init__(self):
+        pass
+    
+    def add_time(self, app_name, elapsed):
         pass
 
 class View:
@@ -23,19 +27,26 @@ class View:
         self.__model = model
 
 class Controller:
+    # TODO Đưa nó ra thành một thread riêng
     """
     Class này lo việc thu gom thông tin. Giao tiếp và bắt các event của Wnck.
     """
     def __init__(self, model):
         self.__model = model
         self.__screen = Wnck.Screen.get_default()
-        self.__screen.connect("active-window-changed", self.on_active_window_changed)
+        self.__screen.connect("active-window-changed", self.__on_active_window_changed)
     
-    def on_active_window_changed(self, screen, previous):
-        current = self.__screen.get_active_window()
-        #logging.debug("Prev: " + previous.get_name())
-        logging.debug("Current: " + current.get_name())
-        import pdb; pdb.set_trace()
+    def __on_active_window_changed(self, screen, previous):
+        if previous == None:
+            self.__start = time.time()
+            self.__current_window = self.__screen.get_active_window()
+            return
+
+        elapsed = time.time() - self.__start
+        logging.debug("%s - %d" % (self.__current_window.get_application().get_name(), elapsed))
+        self.__model.add_time(self.__current_window.get_application().get_name(), elapsed)
+        self.__current_window = self.__screen.get_active_window()
+        self.__start = time.time()
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
