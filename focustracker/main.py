@@ -14,10 +14,29 @@ class Model:
     cấp một giao diện đơn giản đến database đấy luôn.
     """
     def __init__(self):
-        pass
+        logging.debug("Opening database")
+        self.__conn = sqlite3.connect('focus_log.db')
+        self.__c = self.__conn.cursor()
+        
+        self.__c.executescript("""
+            CREATE TABLE IF NOT EXISTS Applications (name text primary key);
+            
+            CREATE TABLE IF NOT EXISTS Logs (
+                app_name text not null,
+                stamp timestamp,
+                elapsed datetime,
+                constraint PK_Logs_time primary key (stamp),
+                constraint FK_Application_name foreign key (app_name) references Applications (name)
+            );
+            """)
+        
+    def close(self):
+        logging.debug("Closing database")
+        self.__c.close()
     
-    def add_time(self, app_name, elapsed):
-        pass
+    def add_entry(self, app_name, elapsed):
+        self.__c.execute("INSERT INTO Logs(stamp, app_name, elapsed) VALUES (strftime('%Y-%m-%d %H:%M:%f', 'now'), ?, ?)", (app_name, elapsed))
+        self.__conn.commit()
 
 class View:
     """
@@ -25,6 +44,9 @@ class View:
     """
     def __init__(self, model):
         self.__model = model
+        window = Gtk.Window()
+        window.connect("destroy", on_quit, self.__model)
+        window.show()
 
 class Controller:
     # TODO Đưa nó ra thành một thread riêng
@@ -44,17 +66,22 @@ class Controller:
 
         elapsed = time.time() - self.__start
         logging.debug("%s - %d" % (self.__current_window.get_application().get_name(), elapsed))
-        self.__model.add_time(self.__current_window.get_application().get_name(), elapsed)
+        self.__model.add_entry(self.__current_window.get_application().get_name(), elapsed)
         self.__current_window = self.__screen.get_active_window()
         self.__start = time.time()
+
+def on_quit(widget, model):
+    model.close()
+    logging.info("Quitting")
+    Gtk.main_quit()
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
     logging.info("Application started")
     
     # Handle Ctrl-C
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-    
+    #signal.signal(signal.SIG, signal.SIG_DFL)
+
     model = Model()
     controller = Controller(model)
     view = View(model)
