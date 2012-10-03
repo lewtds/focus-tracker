@@ -28,7 +28,7 @@ import logging
 
 using_appindicator = True
 try: from gi.repository import AppIndicator3 as Indicator
-except:
+except ImportError:
     using_appindicator = False
 
 class Controller:
