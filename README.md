@@ -8,12 +8,11 @@ computer.
 
 ## Prerequisites ##
 
-On a Ubuntu 12.04 machine or a similar environment, a
+On a Ubuntu 12.04 machine or a similar environment, this should suffice:
     
     sudo apt-get install gir1.2-appindicator3-0.1 gir1.2-wnck-3.0 \
        gir1.2-gtk-3.0 python-gi
 
-should suffixes.
 
 _Note_: The project uses GNOME's GObject Introspection technology to enable
 Python to utilize GNOME's available packages (Ubuntu's AppIndicator, GTK+, ...) 
