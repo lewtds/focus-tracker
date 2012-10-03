@@ -22,6 +22,9 @@
 
 import sqlite3
 import logging
+import os
+
+database_path = os.path.expanduser('~/.config/focus-tracker/focus_log.db')
 
 class Model:
     """
@@ -29,7 +32,10 @@ class Model:
     """
     def __init__(self):
         logging.debug("Opening database")
-        self.__conn = sqlite3.connect('focus_log.db')
+        if not os.path.exists(os.path.dirname(database_path)):
+            os.makedirs(os.path.dirname(database_path))
+            
+        self.__conn = sqlite3.connect(database_path)
         self.__c = self.__conn.cursor()
         
         self.__c.executescript("""
