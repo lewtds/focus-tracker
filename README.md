@@ -14,10 +14,10 @@ On a Ubuntu 12.04 machine or a similar environment, this should suffice:
        gir1.2-gtk-3.0 python-gi
 
 
-_Note_: The project uses GNOME's GObject Introspection technology to enable
-Python to utilize GNOME's available packages (Ubuntu's AppIndicator, GTK+, ...) 
-so if you happen to run a different distro, just look around for some
-similar GObject Introspection packages.
+_Note_: The project uses GNOME's GObject Introspection technology (hence the "gi"
+part in those package names) to enable Python to utilize GNOME's available 
+packages (Ubuntu's AppIndicator, GTK+, ...) so if you happen to run a different
+distro, just look around for some similar GObject Introspection packages.
 
 ## Download ##
 
