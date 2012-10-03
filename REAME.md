@@ -11,7 +11,7 @@ computer.
 On a Ubuntu 12.04 machine or a similar environment, a
     
     sudo apt-get install gir1.2-appindicator3-0.1 gir1.2-wnck-3.0 \
-        gir1.2-gtk-3.0 python-gi
+       gir1.2-gtk-3.0 python-gi
 
 should suffixes.
 
@@ -19,6 +19,10 @@ _Note_: The project uses GNOME's GObject Introspection technology to enable
 Python to utilize GNOME's available packages (Ubuntu's AppIndicator, GTK+, ...) 
 so if you happen to run a different distro, just look around for some
 similar GObject Introspection packages.
+
+## Download ##
+
+    git clone https://github.com/lewtds/focus-tracker.git focus-tracker
 
 ## Running ##
 
