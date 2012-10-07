@@ -1,0 +1,3 @@
+- Use Webkit + Highcharts (jQuery) for interactive, hassle-free GUI
+- Use Accessibility infrastructure to better track GUI components (Web URL,...)
+- Use a plugin framework to allow more customization
