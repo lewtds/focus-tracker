@@ -72,24 +72,9 @@ class View:
         pass
         
     def refresh(self):
-        #self.__update_list_store()
         percentage = self.__model.get_total()
-        #import pdb; pdb.set_trace()
-        #print("refresh('" + json.dumps({"percentage": percentage}) + "')")
         self.__web_view.execute_script("refresh('" + 
         json.dumps({"percentage": percentage}) + "')" );
-        #print(json.dumps(
-                #{
-                    #"percentage" : [['Firefox', 100]]
-                #}
-            #))
-        #self.__web_view.execute_script('shit()')
-        #self.__web_view.execute_script("refresh('" + 
-            #json.dumps(
-                #{
-                    #"percentage" : [['Firefox', 100]]
-                #}
-            #) + "')")
 
     def show(self, widget=None):
         self.__window.show_all()
