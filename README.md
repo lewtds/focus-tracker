@@ -15,7 +15,7 @@ On a Ubuntu 12.04 machine or a similar environment, this should suffice:
 
 
 _Note_: The project uses GNOME's GObject Introspection technology (hence the "gi"
-part in those package names) to enable Python to utilize GNOME's available 
+part in those package names) to enable Python to utilize GNOME's available
 packages (Ubuntu's AppIndicator, GTK+, ...) so if you happen to run a different
 distro, just look around for some similar GObject Introspection packages.
 
@@ -31,3 +31,5 @@ you've downloaded and unpacked the software into a folder named focus-tracker,
 the following command should runs the app:
 
     cd focus-tracker && ./focus-tracker
+
+[aoeaoe](#/aoeuthaue)

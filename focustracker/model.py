@@ -36,7 +36,7 @@ class Model:
             os.makedirs(os.path.dirname(database_path))
             
         self.__conn = sqlite3.connect(database_path)
-        self.__c = self.__conn.cursor()
+        self.__c = self.__conn.cursor() # A connection cursor, used to handle all transactions
         
         self.__c.executescript("""
             CREATE TABLE IF NOT EXISTS Applications (name TEXT PRIMARY KEY);
@@ -65,12 +65,21 @@ class Model:
             """, (app_name, elapsed))
         self.__conn.commit()
 
+    def get_total(self):
+        """Get a list of (app_name, elapsed) tuples with 'elapsed' rounded
+        to one decimal point.
+        """
+        self.__c.execute(
+            'SELECT app_name, ROUND(SUM(elapsed),1) from Logs GROUP BY app_name'
+        )
+        return self.__c.fetchall()
+
     def get_app_total(self, app_name):
         """Gets the total elapsed seconds of a given app_name
         """
         t = (app_name, )
         self.__c.execute(
-            'SELECT SUM(elapsed) FROM Logs WHERE app_name=?',
+            'SELECT ROUNDED(SUM(elapsed),1) FROM Logs WHERE app_name=?',
             t)
         return self.__c.fetchone()[0]
         

@@ -21,7 +21,11 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from gi.repository import Gtk
+from gi.repository import Gtk, WebKit
+import os
+import json
+
+current_path = os.path.dirname(__file__)
 
 class View:
     """
@@ -30,37 +34,62 @@ class View:
     def __init__(self, model):
         self.__model = model
         self.__window = Gtk.Window()
-        self.__tree_view = Gtk.TreeView()
-        self.__list_store = Gtk.ListStore(str, float)
         
         # Gtk.Window.hide_on_delete() should be the handler here
         # but God knows why it doesn't work
         self.__window.connect("delete-event", self.__on_delete_event)
+        self.__window.resize(500, 500)
         
-        self.__update_list_store()
-        self.__tree_view.set_model(self.__list_store)
+        self.__web_view = WebKit.WebView()
+        self.__web_view.load_uri("file://" + os.path.join(current_path, "gui/index.html"))
         
-        app_renderer = Gtk.CellRendererText()
-        app_name_col = Gtk.TreeViewColumn("App", app_renderer, text=0)
-        self.__tree_view.append_column(app_name_col)
+        # View note on self.__message_received()
+        self.__web_view.connect("notify::load-status", self.__on_load)
         
-        elapsed_renderer = Gtk.CellRendererText()
-        elapsed_col = Gtk.TreeViewColumn("Elapsed", elapsed_renderer, text=1)
-        self.__tree_view.append_column(elapsed_col)
+        scroll = Gtk.ScrolledWindow()
+        scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scroll.add(self.__web_view)
         
-        self.__window.add(self.__tree_view)
+        self.__window.add(scroll)
         self.__window.show_all()
         
+    def __on_load(self, object, property):
+        if object.get_load_status() == WebKit.LoadStatus.FINISHED:         
+            self.__web_view.connect("notify::title", self.__message_received)
+            self.refresh()
+    
+    def __message_received(self, object, property):
+        """Handler for self.__web_view's "notify::title" event.
+        
+        This is actually a hack. There's no easy way for the WebKit GUI
+        to communicate with us without setting up a whole HTTP server
+        and port thingy. And also as we are not using the webpage's title
+        for anything, we use it to send back messages and events.
+        """
+        pass
+        
     def __update_list_store(self):
-        # TODO Only update the rows that need updating
-        self.__list_store.clear()
-        apps = self.__model.get_apps()
-        elapsed = []
-        for app in apps:
-            self.__list_store.append((app, self.__model.get_app_total(app)))
+        pass
         
     def refresh(self):
-        self.__update_list_store()
+        #self.__update_list_store()
+        percentage = self.__model.get_total()
+        #import pdb; pdb.set_trace()
+        #print("refresh('" + json.dumps({"percentage": percentage}) + "')")
+        self.__web_view.execute_script("refresh('" + 
+        json.dumps({"percentage": percentage}) + "')" );
+        #print(json.dumps(
+                #{
+                    #"percentage" : [['Firefox', 100]]
+                #}
+            #))
+        #self.__web_view.execute_script('shit()')
+        #self.__web_view.execute_script("refresh('" + 
+            #json.dumps(
+                #{
+                    #"percentage" : [['Firefox', 100]]
+                #}
+            #) + "')")
 
     def show(self, widget=None):
         self.__window.show_all()
@@ -78,5 +107,4 @@ class View:
         """Main window's delete-event handler. Prevents it from being destroyed.
         """
         self.hide()
-        # Return True to stop the delete
-        return True
+        return True    # Return True to stop the delete

@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Highcharts Example</title>
+
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript">
+            <!-- For now, things are horribly global :< -->
+            var chart;
+            
+            function call_refresh() {
+                var data = {"percentage":[
+                    ['Firefox', 50],
+                    ['terminal', 50]
+                ]};
+                refresh(JSON.stringify(data));
+                document.title = 'aoe';
+                }
+               
+            function refresh(data_text) {
+                //document.write(data_text)
+                var data = eval ('(' + data_text + ')');
+                //document.write(JSON.stringify(data.percentage))
+                
+                var percentage = [];
+                var total = 0;
+                for (var i in data.percentage) {
+                    total += data.percentage[i][1];
+                }
+                
+                // Aggregate all apps that have less than 5% show time
+                // into the 'Other' category
+                var other = ["Other", 0];
+                for (var i in data.percentage) {
+                    if (data.percentage[i][1] <= (0.5 * total))
+                    {
+                        other[1] += data.percentage[i][1];
+                        data.percentage.splice(i, 1);
+                    }
+                }
+                                
+                data.percentage.push(other)
+                chart.series[0].setData(data.percentage, true);
+            }
+            
+            function shit() {
+                alert('shit');
+                }
+           
+            $(document).ready(function () {
+                chart = new Highcharts.Chart({
+                    chart: {
+                        renderTo: 'container',
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false
+                    },
+                    title: {
+                        text: 'Apps\' elasped time'
+                    },
+                    plotOptions: {
+                        pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: true,
+                                    color: '#000000',
+                                    connectorColor: '#000000',
+                                    formatter: function() {
+                                        return '<b>'+ this.point.name +'</b>';
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        type: 'pie',
+                        name: 'App share',
+                        data: []
+                    }]
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+        <button onclick="call_refresh()" >Refresh</button>
+        <script src="js/highcharts.js"></script>
+    </body>
+</html>
