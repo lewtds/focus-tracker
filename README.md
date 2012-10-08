@@ -13,6 +13,10 @@ On a Ubuntu 12.04 machine or a similar environment, this should suffice:
     sudo apt-get install gir1.2-appindicator3-0.1 gir1.2-wnck-3.0 \
        gir1.2-gtk-3.0 gir1.2-webkit-3.0 python-gi
 
+For an ArchLinux machine:
+
+    sudo pacman -S libwebkit3 libwnck3 gtk3 gobject-introspection \
+       python-gobject python
 
 _Note_: The project uses GNOME's GObject Introspection technology (hence the "gi"
 part in those package names) to enable Python to utilize GNOME's available
