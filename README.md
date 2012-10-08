@@ -23,12 +23,16 @@ part in those package names) to enable Python to utilize GNOME's available
 packages (Ubuntu's AppIndicator, GTK+, ...) so if you happen to run a different
 distro, just look around for some similar GObject Introspection packages.
 
-## Download ##
-
-    git clone https://github.com/lewtds/focus-tracker.git focus-tracker
-
 ## Installation ##
 
+From Ubuntu package:
+
+    sudo add-apt-repository ppa:ndtrung4419/focus-tracker && 
+    sudo apt-get update && sudo apt-get install focus-tracker
+
+From source:
+
+    git clone https://github.com/lewtds/focus-tracker.git focus-tracker
     python setup.py install
 
 ## Running ##
@@ -39,7 +43,7 @@ If you've installed Focus Tracker:
     
 or look for an entry named 'Focus Tracker' in your favourite app launcher.
 
-There's a run script inside the main package directory under the name of
+Also, there's a run script inside the main package directory under the name of
 "focus-tracker". Assuming you've downloaded and unpacked the software
 into a folder named focus-tracker, the following command should runs the app:
 
