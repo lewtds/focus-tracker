@@ -6,7 +6,7 @@
 
         <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript">
-            <!-- For now, things are horribly global :< -->
+            // For now, things are horribly global :<
             var chart;
                
             function refresh(data_text) {
@@ -17,7 +17,7 @@
                     total += data.percentage[i][1];
                 }
                 
-                // Aggregate all apps that have less than 5% show time
+                // Aggregate all apps that have less than 1% show time
                 // into the 'Other' category
                 for (var i=0; i < data.percentage.length; i++) {
                     if (data.percentage[i][1] <= (0.01 * total))
@@ -49,6 +49,9 @@
                     },
                     title: {
                         text: 'Apps\' elasped time'
+                    },
+                    credits: {
+                        enabled : false
                     },
                     plotOptions: {
                         pie: {

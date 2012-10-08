@@ -72,17 +72,25 @@ class View:
         pass
         
     def refresh(self):
+        """Sends data to the GUI.
+        """
         percentage = self.__model.get_total()
         self.__web_view.execute_script("refresh('" + 
         json.dumps({"percentage": percentage}) + "')" );
 
     def show(self, widget=None):
+        """Shows the window.
+        """
         self.__window.show_all()
     
     def hide(self, widget=None):
+        """Hides the window.
+        """
         self.__window.hide()
         
     def toggle(self, widget=None):
+        """Shows the window if it's hidden and vice versa.
+        """
         if self.__window.get_visible():
             self.hide()
         else:
