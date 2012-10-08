@@ -5,9 +5,9 @@ from gi.repository import Gtk
 import logging
 import signal # for Ctrl-C
     
-import model
-import view
-import controller
+from . import model
+from . import view
+from . import controller
 
 def main():
     logging.basicConfig(level=logging.DEBUG)

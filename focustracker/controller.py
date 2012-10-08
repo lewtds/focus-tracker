@@ -27,7 +27,11 @@ import time
 import logging
 
 using_appindicator = True
-try: from gi.repository import AppIndicator3 as Indicator
+# TODO: There some f*king logging error here that if it can't find
+#       AppIndicator, it throw an ERROR level message and all subsequent
+#       messages won't show.
+try: 
+    from gi.repository import AppIndicator3 as Indicator
 except ImportError:
     using_appindicator = False
 
@@ -71,30 +75,70 @@ class Controller:
         """Creates a tray icon using AppIndicator or Gtk.StatusIcon depending
         on the current environment.
         """
-        menu = Gtk.Menu()
-        
-        toggle_item = Gtk.MenuItem("Toggle")
-        toggle_item.connect("activate", self.__view.toggle)
-        toggle_item.show()
-        menu.append(toggle_item)
-        
-        quit_item = Gtk.MenuItem("Quit")
-        quit_item.connect("activate", self.__on_quit)
-        quit_item.show()
-        menu.append(quit_item)
-        
+       
         logging.info("using_appindicator = " + str(using_appindicator))
         # TODO Add the Gtk.StatusIcon case
         if using_appindicator:
+            logging.debug("Using AppIndicator")
+            
+            self.__menu = Gtk.Menu()
+            quit_item = Gtk.MenuItem("Quit")
+            quit_item.connect("activate", self.__on_quit)
+            quit_item.show()
+            
+            self.__menu.append(quit_item)
+            toggle_item = Gtk.MenuItem("Toggle")
+            toggle_item.connect("activate", self.__view.toggle)
+            toggle_item.show()
+            self.__menu.insert(toggle_item, 0)
+            
             self.__indicator = Indicator.Indicator.new(
                 "focus-tracker",
                 "find",
                 Indicator.IndicatorCategory.APPLICATION_STATUS
             )
             self.__indicator.set_status (Indicator.IndicatorStatus.ACTIVE)
-            #self.__indicator.set_attention_icon("indicator-messages-new")
-            self.__indicator.set_menu(menu)
+            self.__indicator.set_menu(self.__menu)
+        else:
+            logging.debug("Using GtkStatusIcon")
+            
+            self.__icon = Gtk.StatusIcon()
+            self.__icon.set_from_icon_name("find")
+            self.__icon.connect("activate", self.__status_icon_activate)
+            self.__icon.connect("popup-menu", self.__status_icon_popup_menu)
+            self.__icon.set_visible(True)
 
+    def __status_icon_activate(self, status_icon):
+        self.__view.toggle()
+        
+    def __status_icon_popup_menu(self, icon, button, time):
+        self.menu = Gtk.Menu()
+ 
+        about = Gtk.MenuItem()
+        about.set_label("About")
+        quit = Gtk.MenuItem()
+        quit.set_label("Quit")
+ 
+        about.connect("activate", self.__show_about_dialog)
+        quit.connect("activate", self.__on_quit)
+ 
+        self.menu.append(about)
+        self.menu.append(quit)
+ 
+        self.menu.show_all()
+        self.menu.popup(None, None, Gtk.StatusIcon.position_menu, self.__icon, button, time)
+ 
+    def __show_about_dialog(self, widget):
+        about_dialog = Gtk.AboutDialog()
+ 
+        about_dialog.set_destroy_with_parent(True)
+        about_dialog.set_program_name("Focus Tracker")
+        about_dialog.set_version("1.0")
+        about_dialog.set_authors(["Trung Ngo"])
+ 
+        about_dialog.run()
+        about_dialog.destroy()
+        
     def __on_quit(self, widget):
         """Does various cleaning necessary before quitting
         """

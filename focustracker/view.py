@@ -51,7 +51,7 @@ class View:
         scroll.add(self.__web_view)
         
         self.__window.add(scroll)
-        self.__window.show_all()
+        #self.__window.show_all()
         
     def __on_load(self, object, property):
         if object.get_load_status() == WebKit.LoadStatus.FINISHED:         
