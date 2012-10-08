@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=0.1
+Name=Focus Tracker
+Comment=An app that tracks how much time other apps have the user's focus
+Exec=focus-tracker
+Icon=find
+Type=Application
+Categories=Utility;
+StartupNotify=false
