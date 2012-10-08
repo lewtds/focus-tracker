@@ -27,13 +27,21 @@ distro, just look around for some similar GObject Introspection packages.
 
     git clone https://github.com/lewtds/focus-tracker.git focus-tracker
 
+## Installation ##
+
+    python setup.py install
+
 ## Running ##
 
-Currently, there's no install script. But there's a run script inside the
-main package directory under the name of "focus-tracker". Assuming
-you've downloaded and unpacked the software into a folder named focus-tracker,
-the following command should runs the app:
+If you've installed Focus Tracker:
+
+    $ focus-tracker
+    
+or look for an entry named 'Focus Tracker' in your favourite app launcher.
+
+There's a run script inside the main package directory under the name of
+"focus-tracker". Assuming you've downloaded and unpacked the software
+into a folder named focus-tracker, the following command should runs the app:
 
     cd focus-tracker && ./focus-tracker
 
-[aoeaoe](#/aoeuthaue)
